@@ -25,7 +25,7 @@ export interface RegisterDto {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5167/api';
+  private apiUrl = 'http://localhost:5169/api';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 

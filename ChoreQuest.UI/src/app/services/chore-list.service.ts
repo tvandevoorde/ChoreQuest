@@ -42,7 +42,7 @@ export interface ShareChoreListDto {
   providedIn: 'root'
 })
 export class ChoreListService {
-  private apiUrl = 'http://localhost:5167/api/chorelists';
+  private apiUrl = 'http://localhost:5169/api/chorelists';
 
   constructor(private http: HttpClient) {}
 

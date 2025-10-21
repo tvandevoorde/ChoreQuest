@@ -47,7 +47,7 @@ export interface UpdateChoreDto {
   providedIn: 'root'
 })
 export class ChoreService {
-  private apiUrl = 'http://localhost:5167/api/chorelists';
+  private apiUrl = 'http://localhost:5169/api/chorelists';
 
   constructor(private http: HttpClient) {}
 
