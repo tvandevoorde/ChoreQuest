@@ -1,0 +1,177 @@
+<div class="chore-list-detail" *ngIf="choreList">
+  <header>
+    <div>
+      <a routerLink="/dashboard" class="back-link">← Back to Dashboard</a>
+      <h1>{{ choreList.name }}</h1>
+      <p class="description">{{ choreList.description }}</p>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" (click)="showShareForm = !showShareForm">
+        Share List
+      </button>
+      <button class="btn btn-primary" (click)="showCreateChore = !showCreateChore">
+        + Add Chore
+      </button>
+    </div>
+  </header>
+
+  <div class="content">
+    <aside class="sidebar">
+      <div class="stats-card">
+        <h3>Progress</h3>
+        <div class="stat-item">
+          <span>Total Chores:</span>
+          <strong>{{ choreList.choreCount }}</strong>
+        </div>
+        <div class="stat-item">
+          <span>Completed:</span>
+          <strong>{{ choreList.completedChoreCount }}</strong>
+        </div>
+        <div class="stat-item">
+          <span>Remaining:</span>
+          <strong>{{ choreList.choreCount - choreList.completedChoreCount }}</strong>
+        </div>
+      </div>
+
+      <div class="shares-card" *ngIf="choreList.shares.length > 0">
+        <h3>Shared With</h3>
+        <div *ngFor="let share of choreList.shares" class="share-item">
+          <div>
+            <strong>{{ share.sharedWithUsername }}</strong>
+            <span class="permission">{{ share.permission }}</span>
+          </div>
+          <button class="btn-icon" (click)="removeShare(share.id)" title="Remove">
+            ×
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div *ngIf="showShareForm" class="form-card">
+        <h3>Share Chore List</h3>
+        <form (ngSubmit)="shareList()">
+          <div class="form-group">
+            <label for="user">Select User</label>
+            <select id="user" [(ngModel)]="shareDto.sharedWithUserId" name="user" required>
+              <option [value]="0">Select a user...</option>
+              <option *ngFor="let user of users" [value]="user.id">
+                {{ user.username }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="permission">Permission</label>
+            <select id="permission" [(ngModel)]="shareDto.permission" name="permission">
+              <option value="View">View</option>
+              <option value="Edit">Edit</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Share</button>
+            <button type="button" class="btn btn-secondary" (click)="showShareForm = false">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="showCreateChore" class="form-card">
+        <h3>Create New Chore</h3>
+        <form (ngSubmit)="createChore()">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" [(ngModel)]="newChore.title" name="title" required />
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" [(ngModel)]="newChore.description" name="description" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="assignedTo">Assign To</label>
+            <select id="assignedTo" [(ngModel)]="newChore.assignedToId" name="assignedTo">
+              <option [value]="undefined">Unassigned</option>
+              <option [value]="currentUser.id">Me</option>
+              <option *ngFor="let user of users" [value]="user.id">
+                {{ user.username }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <input type="date" id="dueDate" [(ngModel)]="newChore.dueDate" name="dueDate" />
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="newChore.isRecurring" name="isRecurring" />
+              Recurring Chore
+            </label>
+          </div>
+          <div *ngIf="newChore.isRecurring">
+            <div class="form-group">
+              <label for="pattern">Recurrence Pattern</label>
+              <select id="pattern" [(ngModel)]="newChore.recurrencePattern" name="pattern">
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Yearly">Yearly</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="interval">Every (interval)</label>
+              <input type="number" id="interval" [(ngModel)]="newChore.recurrenceInterval" name="interval" min="1" />
+            </div>
+            <div class="form-group">
+              <label for="endDate">End Date (optional)</label>
+              <input type="date" id="endDate" [(ngModel)]="newChore.recurrenceEndDate" name="endDate" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="button" class="btn btn-secondary" (click)="showCreateChore = false">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="chores-list">
+        <h2>Chores</h2>
+        <div *ngIf="chores.length === 0" class="empty-state">
+          No chores yet. Add one to get started!
+        </div>
+        <div *ngFor="let chore of chores" class="chore-item" 
+             [class.completed]="chore.isCompleted"
+             [class.overdue]="isOverdue(chore)"
+             [class.due-soon]="isDueSoon(chore)">
+          <div class="chore-checkbox">
+            <input 
+              type="checkbox" 
+              [checked]="chore.isCompleted" 
+              (change)="toggleChoreComplete(chore)"
+            />
+          </div>
+          <div class="chore-content">
+            <h4>{{ chore.title }}</h4>
+            <p>{{ chore.description }}</p>
+            <div class="chore-meta">
+              <span *ngIf="chore.assignedToUsername" class="assigned">
+                👤 {{ chore.assignedToUsername }}
+              </span>
+              <span *ngIf="chore.dueDate" class="due-date">
+                📅 {{ chore.dueDate | date }}
+              </span>
+              <span *ngIf="chore.isRecurring" class="recurring">
+                🔄 {{ chore.recurrencePattern }}
+              </span>
+            </div>
+          </div>
+          <button class="btn-icon delete" (click)="deleteChore(chore)" title="Delete">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -421,3 +421,7 @@ FodyWeavers.xsd
 *.db
 *.db-shm
 *.db-wal
+
+# Angular
+ChoreQuest.UI/dist/
+ChoreQuest.UI/.angular/

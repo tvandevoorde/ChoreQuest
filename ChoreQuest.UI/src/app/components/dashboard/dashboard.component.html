@@ -1,0 +1,87 @@
+<div class="dashboard">
+  <header>
+    <h1>ChoreQuest Dashboard</h1>
+    <div class="user-info">
+      <span>Welcome, {{ currentUser?.username }}</span>
+      <button class="btn btn-secondary" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <aside class="notifications-panel">
+      <h2>Notifications</h2>
+      <div *ngIf="notifications.length === 0" class="no-notifications">
+        No new notifications
+      </div>
+      <div *ngFor="let notification of notifications" class="notification-item">
+        <div class="notification-title">{{ notification.title }}</div>
+        <div class="notification-message">{{ notification.message }}</div>
+      </div>
+      <a routerLink="/notifications" class="view-all">View All Notifications</a>
+    </aside>
+
+    <main class="chore-lists-section">
+      <div class="section-header">
+        <h2>Your Chore Lists</h2>
+        <button class="btn btn-primary" (click)="showCreateForm = !showCreateForm">
+          + New List
+        </button>
+      </div>
+
+      <div *ngIf="showCreateForm" class="create-form">
+        <h3>Create New Chore List</h3>
+        <form (ngSubmit)="createChoreList()">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="newChoreList.name" 
+              name="name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              [(ngModel)]="newChoreList.description" 
+              name="description"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="button" class="btn btn-secondary" (click)="showCreateForm = false">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="chore-lists-grid">
+        <div *ngFor="let list of choreLists" class="chore-list-card">
+          <div class="card-header">
+            <h3>{{ list.name }}</h3>
+            <button class="btn-icon" (click)="deleteChoreList(list.id)" title="Delete">
+              🗑️
+            </button>
+          </div>
+          <p class="description">{{ list.description }}</p>
+          <div class="stats">
+            <span>{{ list.completedChoreCount }} / {{ list.choreCount }} completed</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getProgressPercentage(list)"></div>
+          </div>
+          <div class="shared-info" *ngIf="list.shares.length > 0">
+            <span>Shared with {{ list.shares.length }} user(s)</span>
+          </div>
+          <a [routerLink]="['/chore-lists', list.id]" class="btn btn-primary">View Details</a>
+        </div>
+
+        <div *ngIf="choreLists.length === 0" class="empty-state">
+          <p>No chore lists yet. Create one to get started!</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
