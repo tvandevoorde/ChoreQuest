@@ -70,7 +70,7 @@ ChoreQuest/
    dotnet run
    ```
 
-   The API will start at `http://localhost:5167` (or `https://localhost:7167` for HTTPS)
+   The API will start at `http://localhost:5169` (or `https://localhost:7169` for HTTPS)
 
 ### Frontend Setup
 
