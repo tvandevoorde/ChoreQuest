@@ -2,6 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { ChoreListService, ChoreList, ShareChoreListDto } from '../../services/chore-list.service';
 import { ChoreService, Chore, CreateChoreDto, UpdateChoreDto } from '../../services/chore.service';
 import { AuthService, User } from '../../services/auth.service';
@@ -9,7 +21,23 @@ import { AuthService, User } from '../../services/auth.service';
 @Component({
   selector: 'app-chore-list-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatProgressBarModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatBottomSheetModule
+  ],
   templateUrl: './chore-list-detail.component.html',
   styleUrls: ['./chore-list-detail.component.css']
 })
@@ -35,7 +63,8 @@ export class ChoreListDetailComponent implements OnInit {
     private router: Router,
     private choreListService: ChoreListService,
     private choreService: ChoreService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -148,5 +177,14 @@ export class ChoreListDetailComponent implements OnInit {
     const today = new Date();
     const diffDays = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     return diffDays >= 0 && diffDays <= 3;
+  }
+
+  getProgressPercentage(): number {
+    if (!this.choreList || this.choreList.choreCount === 0) return 0;
+    return Math.round((this.choreList.completedChoreCount / this.choreList.choreCount) * 100);
+  }
+
+  getPendingCount(): number {
+    return this.chores.filter(c => !c.isCompleted).length;
   }
 }
