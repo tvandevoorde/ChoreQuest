@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ChoreQuest.API.Data;
 using ChoreQuest.API.DTOs;
 using ChoreQuest.API.Models;
+using ChoreQuest.API.Services;
 
 namespace ChoreQuest.API.Controllers;
 
@@ -11,10 +12,12 @@ namespace ChoreQuest.API.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly ChoreQuestDbContext _context;
+    private readonly IEmailService _emailService;
 
-    public UsersController(ChoreQuestDbContext context)
+    public UsersController(ChoreQuestDbContext context, IEmailService emailService)
     {
         _context = context;
+        _emailService = emailService;
     }
 
     [HttpPost("register")]
@@ -74,6 +77,59 @@ public class UsersController : ControllerBase
     {
         var users = await _context.Users.ToListAsync();
         return Ok(users.Select(MapToDto));
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult> ForgotPassword(ForgotPasswordDto dto)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+        if (user == null)
+        {
+            // Return success even if user not found to prevent email enumeration
+            return Ok(new { message = "If the email exists, a password reset link has been sent." });
+        }
+
+        // Generate a secure random token
+        var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        token = token.Replace("+", "").Replace("/", "").Replace("=", "");
+
+        // Create reset token with 1 hour expiration
+        var resetToken = new PasswordResetToken
+        {
+            UserId = user.Id,
+            Token = token,
+            ExpiresAt = DateTime.UtcNow.AddHours(1)
+        };
+
+        _context.PasswordResetTokens.Add(resetToken);
+        await _context.SaveChangesAsync();
+
+        // Send reset email
+        await _emailService.SendPasswordResetEmailAsync(user.Email, user.Username, token);
+
+        return Ok(new { message = "If the email exists, a password reset link has been sent." });
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<ActionResult> ResetPassword(ResetPasswordDto dto)
+    {
+        var resetToken = await _context.PasswordResetTokens
+            .Include(rt => rt.User)
+            .FirstOrDefaultAsync(rt => rt.Token == dto.Token && !rt.IsUsed && rt.ExpiresAt > DateTime.UtcNow);
+
+        if (resetToken == null)
+        {
+            return BadRequest("Invalid or expired reset token");
+        }
+
+        // Update the user's password
+        resetToken.User.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        resetToken.IsUsed = true;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Password has been reset successfully" });
     }
 
     private static UserDto MapToDto(User user)
