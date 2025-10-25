@@ -71,9 +71,3 @@
     gap: 12px;
   }
 }
-
-/* Error snackbar styling */
-::ng-deep .error-snackbar {
-  background-color: #f44336 !important;
-  color: white !important;
-}

@@ -65,4 +65,10 @@ export class ForgotPasswordComponent {
       }
     });
   }
+
+  // Email validation using a simple regex pattern
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 }
