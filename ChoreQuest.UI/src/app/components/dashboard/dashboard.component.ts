@@ -2,6 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../services/auth.service';
 import { ChoreListService, ChoreList, CreateChoreListDto } from '../../services/chore-list.service';
 import { NotificationService, Notification } from '../../services/notification.service';
@@ -9,7 +19,20 @@ import { NotificationService, Notification } from '../../services/notification.s
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressBarModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatGridListModule
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -24,8 +47,17 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private choreListService: ChoreListService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
   ) {}
+
+  // Grid columns based on screen size
+  getGridCols(): number {
+    if (this.breakpointObserver.isMatched(Breakpoints.XSmall)) return 1;
+    if (this.breakpointObserver.isMatched(Breakpoints.Small)) return 1;
+    if (this.breakpointObserver.isMatched(Breakpoints.Medium)) return 2;
+    return 3;
+  }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
