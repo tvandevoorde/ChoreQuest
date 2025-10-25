@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ChoreQuest.API.Data;
+using ChoreQuest.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddSwaggerGen();
 // Add DbContext
 builder.Services.AddDbContext<ChoreQuestDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=chorequest.db"));
+
+// Add Email Service
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Add CORS
 builder.Services.AddCors(options =>

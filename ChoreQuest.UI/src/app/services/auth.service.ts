@@ -21,6 +21,14 @@ export interface RegisterDto {
   password: string;
 }
 
+export interface ForgotPasswordResponse {
+  message: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -65,5 +73,13 @@ export class AuthService {
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/users`);
+  }
+
+  forgotPassword(email: string): Observable<ForgotPasswordResponse> {
+    return this.http.post<ForgotPasswordResponse>(`${this.apiUrl}/users/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/users/reset-password`, { token, newPassword });
   }
 }
