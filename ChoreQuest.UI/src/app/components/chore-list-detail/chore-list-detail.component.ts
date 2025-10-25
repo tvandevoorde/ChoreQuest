@@ -63,8 +63,7 @@ export class ChoreListDetailComponent implements OnInit {
     private router: Router,
     private choreListService: ChoreListService,
     private choreService: ChoreService,
-    private authService: AuthService,
-    private snackBar: MatSnackBar
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
