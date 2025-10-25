@@ -14,6 +14,7 @@ public class ChoreQuestDbContext : DbContext
     public DbSet<Chore> Chores { get; set; }
     public DbSet<ChoreListShare> ChoreListShares { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -89,6 +90,18 @@ public class ChoreQuestDbContext : DbContext
             entity.HasOne(n => n.User)
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // PasswordResetToken entity configuration
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(prt => prt.Id);
+            entity.Property(prt => prt.Token).IsRequired();
+            
+            entity.HasOne(prt => prt.User)
+                .WithMany()
+                .HasForeignKey(prt => prt.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }
