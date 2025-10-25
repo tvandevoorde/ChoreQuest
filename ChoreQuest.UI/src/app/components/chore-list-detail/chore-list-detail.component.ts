@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -58,7 +57,6 @@ export class ChoreListDetailComponent implements OnInit {
     permission: 'View'
   };
   currentUser: any;
-  isMobile = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -66,11 +64,8 @@ export class ChoreListDetailComponent implements OnInit {
     private choreListService: ChoreListService,
     private choreService: ChoreService,
     private authService: AuthService,
-    private breakpointObserver: BreakpointObserver,
     private snackBar: MatSnackBar
-  ) {
-    this.isMobile = this.breakpointObserver.isMatched([Breakpoints.Handset]);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
