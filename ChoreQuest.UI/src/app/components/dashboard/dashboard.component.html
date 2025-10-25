@@ -1,87 +1,133 @@
 <div class="dashboard">
-  <header>
-    <h1>ChoreQuest Dashboard</h1>
-    <div class="user-info">
-      <span>Welcome, {{ currentUser?.username }}</span>
-      <button class="btn btn-secondary" (click)="logout()">Logout</button>
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <div class="user-actions">
+      <span class="welcome-text">Welcome, {{ currentUser?.username }}</span>
+      <button mat-raised-button color="accent" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
     </div>
-  </header>
+  </div>
 
   <div class="dashboard-content">
-    <aside class="notifications-panel">
-      <h2>Notifications</h2>
-      <div *ngIf="notifications.length === 0" class="no-notifications">
-        No new notifications
-      </div>
-      <div *ngFor="let notification of notifications" class="notification-item">
-        <div class="notification-title">{{ notification.title }}</div>
-        <div class="notification-message">{{ notification.message }}</div>
-      </div>
-      <a routerLink="/notifications" class="view-all">View All Notifications</a>
-    </aside>
+    <!-- Notifications Panel -->
+    <mat-card class="notifications-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>notifications</mat-icon>
+          Recent Notifications
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="notifications.length === 0" class="no-notifications">
+          <mat-icon>notifications_none</mat-icon>
+          <p>No new notifications</p>
+        </div>
+        <div *ngFor="let notification of notifications" class="notification-item">
+          <div class="notification-title">{{ notification.title }}</div>
+          <div class="notification-message">{{ notification.message }}</div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions *ngIf="notifications.length > 0">
+        <button mat-button routerLink="/notifications">
+          <mat-icon>visibility</mat-icon>
+          View All
+        </button>
+      </mat-card-actions>
+    </mat-card>
 
-    <main class="chore-lists-section">
+    <!-- Chore Lists Section -->
+    <div class="chore-lists-section">
       <div class="section-header">
         <h2>Your Chore Lists</h2>
-        <button class="btn btn-primary" (click)="showCreateForm = !showCreateForm">
-          + New List
+        <button mat-fab color="primary" (click)="showCreateForm = !showCreateForm" aria-label="Create new chore list">
+          <mat-icon>add</mat-icon>
         </button>
       </div>
 
-      <div *ngIf="showCreateForm" class="create-form">
-        <h3>Create New Chore List</h3>
-        <form (ngSubmit)="createChoreList()">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              [(ngModel)]="newChoreList.name" 
-              name="name"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea 
-              id="description" 
-              [(ngModel)]="newChoreList.description" 
-              name="description"
-              rows="3"
-            ></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Create</button>
-            <button type="button" class="btn btn-secondary" (click)="showCreateForm = false">Cancel</button>
-          </div>
+      <!-- Create Form -->
+      <mat-expansion-panel [expanded]="showCreateForm">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Create New Chore List</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <form (ngSubmit)="createChoreList()" class="create-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="newChoreList.name" name="name" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="newChoreList.description" name="description" rows="3"></textarea>
+          </mat-form-field>
+
+          <mat-card-actions>
+            <button mat-raised-button color="primary" type="submit">Create</button>
+            <button mat-button type="button" (click)="showCreateForm = false">Cancel</button>
+          </mat-card-actions>
         </form>
-      </div>
+      </mat-expansion-panel>
 
-      <div class="chore-lists-grid">
-        <div *ngFor="let list of choreLists" class="chore-list-card">
-          <div class="card-header">
-            <h3>{{ list.name }}</h3>
-            <button class="btn-icon" (click)="deleteChoreList(list.id)" title="Delete">
-              🗑️
-            </button>
-          </div>
-          <p class="description">{{ list.description }}</p>
-          <div class="stats">
-            <span>{{ list.completedChoreCount }} / {{ list.choreCount }} completed</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="getProgressPercentage(list)"></div>
-          </div>
-          <div class="shared-info" *ngIf="list.shares.length > 0">
-            <span>Shared with {{ list.shares.length }} user(s)</span>
-          </div>
-          <a [routerLink]="['/chore-lists', list.id]" class="btn btn-primary">View Details</a>
-        </div>
+      <!-- Chore Lists Grid -->
+      <mat-grid-list [cols]="getGridCols()" rowHeight="280px" gutterSize="16px" class="chore-lists-grid">
+        <mat-grid-tile *ngFor="let list of choreLists">
+          <mat-card class="chore-list-card">
+            <mat-card-header>
+              <mat-card-title>{{ list.name }}</mat-card-title>
+              <mat-card-subtitle>{{ list.description }}</mat-card-subtitle>
+              <button mat-icon-button (click)="deleteChoreList(list.id)" color="warn" class="delete-button">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-card-header>
 
-        <div *ngIf="choreLists.length === 0" class="empty-state">
-          <p>No chore lists yet. Create one to get started!</p>
-        </div>
+            <mat-card-content>
+              <div class="stats">
+                <span>{{ list.completedChoreCount }} / {{ list.choreCount }} completed</span>
+              </div>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="getProgressPercentage(list)"
+                class="progress-bar">
+              </mat-progress-bar>
+
+              <div class="shared-info" *ngIf="list.shares.length > 0">
+                <mat-chip-set>
+                  <mat-chip>
+                    <mat-icon matChipAvatar>group</mat-icon>
+                    Shared with {{ list.shares.length }} user(s)
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-raised-button color="primary" [routerLink]="['/chore-lists', list.id]">
+                <mat-icon>visibility</mat-icon>
+                View Details
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+
+      <!-- Empty State -->
+      <div *ngIf="choreLists.length === 0" class="empty-state">
+        <mat-card>
+          <mat-card-content>
+            <div class="empty-content">
+              <mat-icon>list_alt</mat-icon>
+              <h3>No chore lists yet</h3>
+              <p>Create your first chore list to get started!</p>
+              <button mat-raised-button color="primary" (click)="showCreateForm = true">
+                <mat-icon>add</mat-icon>
+                Create List
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
-    </main>
+    </div>
   </div>
 </div>
