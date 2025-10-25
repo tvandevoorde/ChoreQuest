@@ -24,10 +24,9 @@ public class EmailService : IEmailService
         var resetUrl = $"http://localhost:4200/reset-password?token={resetToken}";
         
         _logger.LogInformation(
-            "Password reset requested for user: {Username} ({Email})\n" +
-            "Reset link: {ResetUrl}\n" +
-            "Token: {Token}",
-            username, toEmail, resetUrl, resetToken);
+            "Password reset requested for user: {Username}\n" +
+            "Reset link: {ResetUrl}",
+            username, resetUrl);
         
         // Simulate async email sending
         await Task.Delay(100);
