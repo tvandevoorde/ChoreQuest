@@ -15,7 +15,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChoreListService, ChoreList, ShareChoreListDto } from '../../services/chore-list.service';
 import { ChoreService, Chore, CreateChoreDto, UpdateChoreDto } from '../../services/chore.service';
 import { AuthService, User } from '../../services/auth.service';
