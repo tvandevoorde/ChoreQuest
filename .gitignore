@@ -416,3 +416,12 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# Angular
+ChoreQuest.UI/dist/
+ChoreQuest.UI/.angular/

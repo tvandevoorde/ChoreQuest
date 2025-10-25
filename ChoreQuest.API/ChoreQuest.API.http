@@ -1,0 +1,6 @@
+@ChoreQuest.API_HostAddress = http://localhost:5169
+
+GET {{ChoreQuest.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

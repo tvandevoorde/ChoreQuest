@@ -1,0 +1,261 @@
+.chore-list-detail {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-link {
+  color: white;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.description {
+  margin: 5px 0 0 0;
+  opacity: 0.9;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.sidebar {
+  width: 280px;
+}
+
+.stats-card,
+.shares-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.stats-card h3,
+.shares-card h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.share-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.permission {
+  display: block;
+  font-size: 12px;
+  color: #666;
+}
+
+main {
+  flex: 1;
+}
+
+.form-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.form-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.chores-list {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chores-list h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.chore-item {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: white;
+  align-items: start;
+}
+
+.chore-item.completed {
+  background-color: #f8f9fa;
+  opacity: 0.7;
+}
+
+.chore-item.completed h4 {
+  text-decoration: line-through;
+}
+
+.chore-item.overdue {
+  border-left: 4px solid #dc3545;
+  background-color: #fff5f5;
+}
+
+.chore-item.due-soon {
+  border-left: 4px solid #ffc107;
+  background-color: #fffbf0;
+}
+
+.chore-checkbox {
+  padding-top: 2px;
+}
+
+.chore-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.chore-content {
+  flex: 1;
+}
+
+.chore-content h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.chore-content p {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.chore-meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.chore-meta span {
+  font-size: 14px;
+  color: #666;
+}
+
+.assigned,
+.due-date,
+.recurring {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: #e9ecef;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.btn-icon.delete:hover {
+  color: #dc3545;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
